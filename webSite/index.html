@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+	<meta charset="utf-8" />
+</head>
+<body>
+
+    <script src="jQuery.js"></script>
+    <script>
+        function GetCustomers() {
+            $.getJSON("http://localhost:58619/ServiceMain.svc/json/GetCustomers", {},
+              function (data) {
+                  $('#listParticipant').html(data);
+              });
+        } 
+
+        function makeWinners() {
+            var lstId = GetWinners();
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:58619/ServiceMain.svc/json/makeWinners",
+                data: JSON.stringify(lstId),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                processData: true,
+                success: function (data, status, jqXHR) {
+                    location.reload()
+                },
+                error: function (xhr) {
+                    location.reload()
+                }
+            });
+        }
+
+        function GetWinners() {
+                var listId = [];
+                var checkboxes = $('input[type=checkbox]:checked');
+                for (var i = 0; i < checkboxes.length; i++) {
+                    var id = checkboxes[i].id;
+                    listId.push(id);
+                }
+                return listId;
+        }
+
+    </script>
+
+    <div id="listParticipant"></div>
+
+    <input type="button" value="Получить список участников" onclick="GetCustomers()" />
+    <input type="button" value="Сохранить победителей" onclick="makeWinners()" />
+
+
+
+    </body>
+</html>
